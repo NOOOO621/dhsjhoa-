@@ -4,23 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Forge</title>
-    <!-- Injects an Import Map so the browser understands your exact "from 'react'" lines -->
-    <script type="importmap">
-      {
-        "imports": {
-          "react": "https://esm.sh",
-          "react-dom/client": "https://esm.sh"
-        }
-      }
-    </script>
+    <!-- Load stable production React engines -->
+    <script src="https://unpkg.com" crossorigin></script>
+    <script src="https://unpkg.com" crossorigin></script>
     <script src="https://unpkg.com"></script>
+    <script>
+        // Directly maps your import statements so they never crash the browser
+        window.require = function(module) {
+            if (module === 'react') return window.React;
+            if (module === 'react-dom' || module === 'react-dom/client') return window.ReactDOM;
+        };
+        window.exports = {};
+    </script>
     <style>
         body { font-family: sans-serif; background: #fafafa; padding: 20px; }
     </style>
 </head>
 <body>
     <div id="root"></div>
-    <script type="text/babel" data-type="module">
+    <script type="text/babel">
+
 
 import { useState, useRef, useEffect, useMemo } from 'react';
 
@@ -12341,20 +12344,22 @@ onClick={()=>setJumpAheadConfirm(null)}>
 </div>
 );
 }
-          // Smart loader that finds and renders your component automatically
-        import { createRoot } from 'react-dom/client';
-        
-        const targetComponent = 
-            (typeof App !== 'undefined' ? App : null) || 
-            (typeof Quiz !== 'undefined' ? Quiz : null) || 
-            (typeof QuizForge !== 'undefined' ? QuizForge : null);
+              // Safely mounts your code without changing its internal structure
+        (function() {
+            const container = document.getElementById('root');
+            if (!container) return;
+            
+            const MainApp = 
+                (typeof App !== 'undefined' ? App : null) || 
+                (typeof Quiz !== 'undefined' ? Quiz : null) || 
+                (typeof QuizForge !== 'undefined' ? QuizForge : null);
 
-        if (targetComponent) {
-            const root = createRoot(document.getElementById('root'));
-            root.render(React.createElement(targetComponent));
-        } else {
-            console.error("Could not find a starting component like App, Quiz, or QuizForge.");
-        }
+            if (MainApp) {
+                const root = window.ReactDOM.createRoot(container);
+                root.render(window.React.createElement(MainApp));
+            }
+        })();
     </script>
 </body>
 </html>
+
