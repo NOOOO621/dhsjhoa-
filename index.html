@@ -12413,4 +12413,15 @@ onClick={()=>setJumpAheadConfirm(null)}>
     </script>
 </body>
 </html>
+        (function() {
+            const container = document.getElementById('root');
+            if (!container) return;
+            const MainApp = (typeof App !== 'undefined' ? App : null) || (typeof Quiz !== 'undefined' ? Quiz : null) || (typeof QuizForge !== 'undefined' ? QuizForge : null);
+            if (MainApp) {
+                window.ReactDOM.createRoot(container).render(window.React.createElement(MainApp));
+            }
+        })();
+    </script>
+</body>
+</html>
 
