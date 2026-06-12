@@ -4,24 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Forge</title>
-    <!-- Load React directly into the browser global window -->
-    <script src="https://unpkg.com" crossorigin></script>
-    <script src="https://unpkg.com" crossorigin></script>
-    <script src="https://unpkg.com"></script>
-    <script>
-        // Trick the browser to make your exact import statements work
-        window.require = function(module) {
-            if (module === 'react') return window.React;
-            if (module === 'react-dom') return window.ReactDOM;
-        };
+    <!-- Injects an Import Map so the browser understands your exact "from 'react'" lines -->
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh",
+          "react-dom/client": "https://esm.sh"
+        }
+      }
     </script>
+    <script src="https://unpkg.com"></script>
     <style>
         body { font-family: sans-serif; background: #fafafa; padding: 20px; }
     </style>
 </head>
 <body>
     <div id="root"></div>
-    <script type="text/babel">
+    <script type="text/babel" data-type="module">
+
 import { useState, useRef, useEffect, useMemo } from 'react';
 
 const QB = {
@@ -12341,12 +12341,19 @@ onClick={()=>setJumpAheadConfirm(null)}>
 </div>
 );
 }
-                // Connects your code to the HTML root container
-        if (typeof App !== 'undefined') {
-            const root = ReactDOM.createRoot(document.getElementById('root'));
-            root.render(<App />);
+          // Smart loader that finds and renders your component automatically
+        import { createRoot } from 'react-dom/client';
+        
+        const targetComponent = 
+            (typeof App !== 'undefined' ? App : null) || 
+            (typeof Quiz !== 'undefined' ? Quiz : null) || 
+            (typeof QuizForge !== 'undefined' ? QuizForge : null);
+
+        if (targetComponent) {
+            const root = createRoot(document.getElementById('root'));
+            root.render(React.createElement(targetComponent));
         } else {
-            console.error("React component 'App' not found at the bottom of the file.");
+            console.error("Could not find a starting component like App, Quiz, or QuizForge.");
         }
     </script>
 </body>
