@@ -4,25 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Forge</title>
-    <!-- Injects the browser runtime for your React modules -->
-    <script type="importmap">
-      {
-        "imports": {
-          "react": "https://esm.sh",
-          "react-dom": "https://esm.sh"
-        }
-      }
-    </script>
+    <!-- Load React directly into the browser global window -->
+    <script src="https://unpkg.com" crossorigin></script>
+    <script src="https://unpkg.com" crossorigin></script>
     <script src="https://unpkg.com"></script>
+    <script>
+        // Trick the browser to make your exact import statements work
+        window.require = function(module) {
+            if (module === 'react') return window.React;
+            if (module === 'react-dom') return window.ReactDOM;
+        };
+    </script>
     <style>
         body { font-family: sans-serif; background: #fafafa; padding: 20px; }
     </style>
 </head>
 <body>
-    <!-- The starting point container where your React app loads -->
     <div id="root"></div>
-
-    <script type="text/babel" data-type="module">
+    <script type="text/babel">
 import { useState, useRef, useEffect, useMemo } from 'react';
 
 const QB = {
@@ -12342,3 +12341,13 @@ onClick={()=>setJumpAheadConfirm(null)}>
 </div>
 );
 }
+                // Connects your code to the HTML root container
+        if (typeof App !== 'undefined') {
+            const root = ReactDOM.createRoot(document.getElementById('root'));
+            root.render(<App />);
+        } else {
+            console.error("React component 'App' not found at the bottom of the file.");
+        }
+    </script>
+</body>
+</html>
