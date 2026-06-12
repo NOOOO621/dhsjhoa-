@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Forge</title>
-    <!-- Load stable production React engines -->
+    <title>Quiz Forge Diagnostics</title>
     <script src="https://unpkg.com" crossorigin></script>
     <script src="https://unpkg.com" crossorigin></script>
     <script src="https://unpkg.com"></script>
@@ -15,15 +14,27 @@
             if (module === 'react-dom' || module === 'react-dom/client') return window.ReactDOM;
         };
         window.exports = {};
+
+        // CATCHES THE HIDDEN ERROR AND PRINTS IT DIRECTLY ON THE SCREEN
+        window.addEventListener('error', function(e) {
+            const errorDiv = document.getElementById('error-display');
+            if (errorDiv) {
+                errorDiv.style.display = 'block';
+                errorDiv.innerText = "⚠️ Code Error Found:\n" + e.message + "\n\nAt line: " + e.lineno;
+            }
+        });
     </script>
     <style>
         body { font-family: sans-serif; background: #fafafa; padding: 20px; }
+        #error-display { display: none; background: #fff5f5; color: #e53e3e; border: 2px solid #fed7d7; padding: 20px; border-radius: 8px; margin: 20px; white-space: pre-wrap; font-family: monospace; font-size: 16px; }
     </style>
 </head>
 <body>
+    <!-- Error display box -->
+    <div id="error-display"></div>
+    
     <div id="root"></div>
     <script type="text/babel">
-
 
 import { useState, useRef, useEffect, useMemo } from 'react';
 
