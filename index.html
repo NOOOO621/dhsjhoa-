@@ -3,6 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Forge Debugger</title>
+    <script src="https://unpkg.com" crossorigin></script>
+    <script src="https://unpkg.com" crossorigin></script>
+    <script src="https://unpkg.com"></script>
+    <script>
+        // Force errors out of the developer tool hiding zones and onto your page layout
+        const oldConsoleError = console.error;
+        console.error = function(...args) {
+            oldConsoleError.apply(console, args);
+            const msg = args.join(' ');
+            if (msg.includes('Babel') || msg.includes('Error') || msg.includes('Syntax')) {
+                const box = document.getElementById('error-box');
+                if (box) {
+                    box.style.display = 'block';
+                    box.innerText = "❌ Compiler Error Caught:\n\n" + msg;
+                }
+            }
+        };
+        
+        window.require = function(module) {
+            if (module === 'react') return window.React;
+            if (module === 'react-dom' || module === 'react-dom/client') return window.ReactDOM;
+        };
+        window.exports = {};
+    </script>
+    <style>
+        body { font-family: sans-serif; background: #fafafa; padding: 20px; }
+        #error-box { display: none; background: #fff5f5; color: #e53e3e; border: 2px solid #fed7d7; padding: 20px; border-radius: 8px; font-family: monospace; white-space: pre-wrap; font-size: 15px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div id="error-box"></div>
+    <div id="root"></div>
+    <script type="text/babel">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Forge Diagnostics</title>
     <script src="https://unpkg.com" crossorigin></script>
     <script src="https://unpkg.com" crossorigin></script>
